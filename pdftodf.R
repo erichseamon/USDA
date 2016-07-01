@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------#
-# TITLE:        pdftodf.R
+# TITLE:        croploss_pdftodf.R
 #
-# COURSE:       converts many pdfs to text files and then into a data frame
+# COURSE:       converts many crop loss pdfs to text files and then into a data frame
 #               
 #
 # AUTHOR:       Erich Seamon
@@ -24,13 +24,14 @@ rm(list=ls())
 # Use text-mining package to extract text from PDF files    
 library(tm)
 library('stringi')
+
 setwd("/git/data/USDA/pdfs/")
 path <- setwd("/git/data/USDA/pdfs/")
 
 system("rm /git/data/USDA/pdfs/rowsToCheck.txt")
 system("rm /git/data/USDA/pdfs/USDA-indemnity.txt")
 
-myfiles <- list.files(path = path, pattern = "15table.pdf",  full.names = F, recursive=FALSE)
+myfiles <- list.files(path = path, pattern = "13table.pdf",  full.names = F, recursive=FALSE)
 
 myfiles_length <- length(myfiles)
 file_length_half <- myfiles_length*2
@@ -120,10 +121,10 @@ final[grep("^[$].*", final$X6)]
 #--selects those rows that are wonked out and have $ in X6
 #final2 <- grep("^$", final$X6, value=TRUE)
 
-finalMT <- subset(final, X3 == "MONTANA")
-finalOR <- subset(final, X3 == "OREGON")
-finalWA <- subset(final, X3 == "WASHINGTON")
-finalID <- subset(final, X3 == "IDAHO")
+finalMT <- subset(final, X4 == "MONTANA")
+finalOR <- subset(final, X4 == "OREGON")
+finalWA <- subset(final, X4 == "WASHINGTON")
+finalID <- subset(final, X4 == "IDAHO")
 
 #final3 <- rbind(finalMT, finalOR, finalWA, finalID)
 
@@ -141,8 +142,6 @@ finalID <- subset(final, X3 == "IDAHO")
 #  setwd("/git/data/USDA/txtfiles/")
 #  write(singlefile, singlefilename, append=TRUE)
 #}
-
-
 
 finalall <- rbind(finalMT, finalOR, finalWA, finalID)
 
