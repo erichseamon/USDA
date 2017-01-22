@@ -1,7 +1,7 @@
 #------------------------------------------------------------------------#
 # TITLE:        croploss_pdftodf.R
 #
-# COURSE:       converts many crop loss pdfs to text files and then into a data frame
+# COURSE:       converts many crop loss pdfs to text files and then into a data frame for current year
 #               
 #
 # AUTHOR:       Erich Seamon
@@ -25,13 +25,13 @@ rm(list=ls())
 library(tm)
 library('stringi')
 
-setwd("/git/data/USDA/pdfs/")
-path <- setwd("/git/data/USDA/pdfs/")
+setwd("/git/data/USDA/pdf2016/")
+path <- setwd("/git/data/USDA/pdf2016/")
 
-system("rm /git/data/USDA/pdfs/rowsToCheck.txt")
-system("rm /git/data/USDA/pdfs/USDA-indemnity.txt")
+system("rm /git/data/USDA/pdf2016/rowsToCheck.txt")
+system("rm /git/data/USDA/pdf2016/USDA-indemnity.txt")
 
-myfiles <- list.files(path = path, pattern = "13table.pdf",  full.names = F, recursive=FALSE)
+myfiles <- list.files(path = path, pattern = "16table.pdf",  full.names = F, recursive=FALSE)
 
 myfiles_length <- length(myfiles)
 file_length_half <- myfiles_length*2
@@ -96,10 +96,10 @@ for (i in myfiles){
   write(dat, "rowsToCheck.txt", append=TRUE)
 }
 
-xx <- read.table("/git/data/USDA/pdfs/rowsToCheck.txt")
+xx <- read.table("/git/data/USDA/pdf2016/rowsToCheck.txt")
 xxx <- data.frame(xx)
 
-newrowstocheck <- data.frame(do.call('rbind', strsplit(as.character(xxx$V1),'|',fixed=TRUE)))
+newrowstocheck <- data.frame(do.call('rbind', strsplit(as.character(xxx$V1),'|', fixed=TRUE)))
 
 newrowstocheck$X1 <- paste(newrowstocheck$X1,newrowstocheck$X2, sep="")
 final <- newrowstocheck[,-2]
@@ -121,10 +121,10 @@ final[grep("^[$].*", final$X6)]
 #--selects those rows that are wonked out and have $ in X6
 #final2 <- grep("^$", final$X6, value=TRUE)
 
-finalMT <- subset(final, X4 == "MONTANA")
-finalOR <- subset(final, X4 == "OREGON")
-finalWA <- subset(final, X4 == "WASHINGTON")
-finalID <- subset(final, X4 == "IDAHO")
+finalMT <- subset(final, X3 == "MONTANA")
+finalOR <- subset(final, X3 == "OREGON")
+finalWA <- subset(final, X3 == "WASHINGTON")
+finalID <- subset(final, X3 == "IDAHO")
 
 #final3 <- rbind(finalMT, finalOR, finalWA, finalID)
 
@@ -145,6 +145,6 @@ finalID <- subset(final, X4 == "IDAHO")
 
 finalall <- rbind(finalMT, finalOR, finalWA, finalID)
 
-write.table(finalall, "/git/data/USDA/pdfs/USDA-indemnity.txt")
+write.table(finalall, "/git/data/USDA/pdf2016/USDA-indemnity.txt")
 
-write.table(finalall, "/var/www/html/home/data/USDA/pdfs/USDA-indemnity.txt")
+write.table(finalall, "/var/www/html/home/data/USDA/pdf2016/USDA-indemnity.txt")
